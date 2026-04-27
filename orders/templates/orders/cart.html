@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cart</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+
+        .top-link {
+            display: block;
+            margin: 20px;
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .cart-item img {
+            border-radius: 5px;
+        }
+
+        .details {
+            flex: 1;
+            margin-left: 20px;
+        }
+
+        .details h3 {
+            margin: 0;
+        }
+
+        .remove-btn {
+            background: red;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .remove-btn:hover {
+            background: darkred;
+        }
+
+        .total-box {
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        .checkout-btn {
+            background: green;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .checkout-btn:hover {
+            background: darkgreen;
+        }
+
+        .message {
+            text-align: center;
+            color: green;
+        }
+
+        .empty {
+            text-align: center;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Your Cart 🛒</h2>
+
+<a href="/" class="top-link">⬅ Back to Home</a>
+
+<div class="container">
+
+    <!-- ✅ Messages -->
+    {% for message in messages %}
+        <p class="message">{{ message }}</p>
+    {% endfor %}
+
+    {% if user.is_authenticated %}
+
+        {% if user.userprofile.role == 'buyer' %}
+
+            {% if items %}
+
+                {% for item in items %}
+                    <div class="cart-item">
+
+                        {% if item.product.image %}
+                            <img src="{{ item.product.image.url }}" width="100">
+                        {% endif %}
+
+                        <div class="details">
+                            <h3>{{ item.product.name }}</h3>
+                            <p>Price: ₹{{ item.product.price }}</p>
+                            <p>Quantity: {{ item.quantity }}</p>
+                            <p><b>Total: ₹{{ item.total_price }}</b></p>
+                        </div>
+
+                        <a href="{% url 'remove_from_cart' item.id %}">
+                            <button class="remove-btn">Remove ❌</button>
+                        </a>
+
+                    </div>
+                {% endfor %}
+
+                <div class="total-box">
+                    <h3>Grand Total: ₹{{ total }}</h3>
+
+                    <a href="{% url 'checkout' %}">
+                        <button class="checkout-btn">Proceed to Checkout ✅</button>
+                    </a>
+                </div>
+
+            {% else %}
+                <p class="empty">Your cart is empty 😔</p>
+            {% endif %}
+
+        {% else %}
+            <p class="empty">Only buyers can access the cart ❌</p>
+        {% endif %}
+
+    {% else %}
+        <p class="empty">Please <a href="{% url 'login' %}">login</a> to view your cart.</p>
+    {% endif %}
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Checkout | Champion Gear</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://images.unsplash.com/photo-1517649763962-0c623066013b') no-repeat center center/cover;
+        }
+
+        /* 🔥 OVERLAY */
+        .overlay {
+            background: rgba(255, 255, 255, 0.9);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* 🔥 CONTAINER */
+        .checkout-box {
+            max-width: 500px;
+            margin: 40px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            text-align: center;
+            color: green;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            resize: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: green;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: darkgreen;
+        }
+
+        .back-link {
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .message {
+            color: green;
+            text-align: center;
+        }
+
+        .empty {
+            text-align: center;
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="overlay">
+
+<div class="checkout-box">
+
+<h2>🏆 Champion Gear Checkout</h2>
+
+<a href="{% url 'cart' %}" class="back-link">⬅ Back to Cart</a>
+
+<hr>
+
+<!-- ✅ Messages -->
+{% for message in messages %}
+    <p class="message">{{ message }}</p>
+{% endfor %}
+
+{% if user.is_authenticated %}
+
+    {% if user.userprofile.role == 'buyer' %}
+
+        {% if total == 0 %}
+            <p class="empty">Your cart is empty 😔</p>
+            <a href="/">Go to Home</a>
+
+        {% else %}
+
+            <h3>Total Amount: ₹{{ total }}</h3>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <label><b>Delivery Address:</b></label><br>
+                <textarea name="address" rows="4" required placeholder="Enter your delivery address..."></textarea><br><br>
+
+                <button type="submit" class="btn">
+                    Place Order ✅
+                </button>
+            </form>
+
+        {% endif %}
+
+    {% else %}
+        <p class="empty">Only buyers can checkout ❌</p>
+    {% endif %}
+
+{% else %}
+    <p class="empty">Please <a href="{% url 'login' %}">login</a> to continue.</p>
+{% endif %}
+
+</div>
+
+</div>
+
+</body>
+</html>

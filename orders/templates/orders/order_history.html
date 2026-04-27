@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Orders</title>
+
+<style>
+body{
+font-family:Arial;
+background:#f4f6f9;
+padding:20px;
+}
+
+h2{
+text-align:center;
+}
+
+.order-box{
+background:white;
+padding:20px;
+margin:20px auto;
+width:60%;
+border-radius:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+.order-box p{
+margin:8px 0;
+}
+
+.no-orders{
+text-align:center;
+color:red;
+}
+
+.btn{
+display:block;
+width:fit-content;
+margin:20px auto;
+padding:8px 15px;
+background:#007bff;
+color:white;
+text-decoration:none;
+border-radius:5px;
+}
+
+.cancel-btn{
+background:red;
+color:white;
+padding:10px 14px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+margin-top:12px;
+}
+
+.cancel-btn:hover{
+background:darkred;
+}
+
+.status{
+font-weight:bold;
+}
+
+.pending{
+color:orange;
+}
+
+.shipped{
+color:blue;
+}
+
+.delivered{
+color:green;
+}
+
+.cancelled{
+color:red;
+}
+</style>
+
+</head>
+
+<body>
+
+<h2>My Orders</h2>
+
+<a href="/" class="btn">
+⬅ Back to Home
+</a>
+
+
+{% for order in orders %}
+
+<div class="order-box">
+
+<p>
+<strong>Order ID:</strong>
+#{{ order.id }}
+</p>
+
+<p>
+<strong>Total Amount:₹{{ order.total_price }}
+
+
+</strong>
+
+</p>
+
+<p>
+<strong>Address:</strong>
+{{ order.address }}
+</p>
+
+<p>
+<strong>Date:</strong>
+{{ order.created_at }}
+</p>
+
+<p class="status">
+<strong>Status:</strong>
+
+{% if order.status == "Pending" %}
+<span class="pending">
+Pending
+</span>
+
+{% elif order.status == "Shipped" %}
+<span class="shipped">
+Shipped
+</span>
+
+{% elif order.status == "Delivered" %}
+<span class="delivered">
+Delivered
+</span>
+
+{% elif order.status == "Cancelled" %}
+<span class="cancelled">
+Cancelled
+</span>
+{% endif %}
+
+</p>
+
+
+<!-- Cancel option only for pending orders -->
+{% if order.status == "Pending" %}
+<form method="POST"
+action="{% url 'cancel_order' order.id %}">
+
+{% csrf_token %}
+
+<button type="submit"
+class="cancel-btn">
+
+Cancel Order
+
+</button>
+
+</form>
+{% endif %}
+
+</div>
+
+{% empty %}
+
+<p class="no-orders">
+No orders yet 😔
+</p>
+
+{% endfor %}
+
+</body>
+</html>

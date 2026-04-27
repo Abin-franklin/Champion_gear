@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .register-box {
+            background: white;
+            padding: 30px;
+            width: 350px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            margin-top: 12px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            background: #667eea;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #5a67d8;
+        }
+
+        .error {
+            color: red;
+            font-size: 13px;
+            margin-top: 3px;
+        }
+
+        .message {
+            color: red;
+            text-align: center;
+        }
+
+        a {
+            color: #667eea;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="register-box">
+
+    <h2>Register 👤</h2>
+
+    <!-- 🔥 Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <p class="message">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <!-- Username -->
+        <label>Username</label>
+        <input type="text" name="username" value="{{ form.username.value|default:'' }}">
+        <div class="error">{{ form.username.errors }}</div>
+
+        <!-- Email -->
+        <label>Email</label>
+        <input type="email" name="email" value="{{ form.email.value|default:'' }}">
+        <div class="error">{{ form.email.errors }}</div>
+
+        <!-- Password -->
+        <label>Password</label>
+        <input type="password" name="password">
+        <div class="error">{{ form.password.errors }}</div>
+
+        <!-- Role -->
+        <label>Select Role</label>
+        <select name="role">
+            <option value="">Select Role</option>
+            <option value="buyer" {% if form.role.value == 'buyer' %}selected{% endif %}>Buyer</option>
+            <option value="seller" {% if form.role.value == 'seller' %}selected{% endif %}>Seller</option>
+        </select>
+        <div class="error">{{ form.role.errors }}</div>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <p style="margin-top:15px; text-align:center;">
+        Already have an account?
+        <a href="{% url 'login' %}">Login</a>
+    </p>
+
+</div>
+
+</body>
+</html>
